@@ -134,6 +134,58 @@ IOS에서 포트원 V1 결제연동 모듈을 사용하기 위해서는 `info.pl
 ...
 ```
 
+#### 4. PASS 앱 Universal Link 설정 (선택 사항)
+Push 알림 없이 PASS 앱(SKT PASS, KT 인증, U+인증)을 실행해 본인인증을 진행하고 앱으로 복귀하기 위해서는 Universal Link 설정이 필요합니다.
+
+##### 4.1 mRedirectUrl 설정
+본인인증 요청 시 `CertificationData` 객체의 `mRedirectUrl` 파라미터에 `UrlData.redirectUrl` 값을 설정해야 합니다. 다날의 경우, mRedirectUrl 설정 시 carrier 파라미터로 전달한 통신사 선택을 사용자가 변경할 수 없으므로 주의해주세요.
+
+```dart
+import 'package:portone_flutter/model/certification_data.dart';
+import 'package:portone_flutter/model/url_data.dart'; // UrlData import 추가
+
+// ...
+
+CertificationData data = CertificationData(
+  mRedirectUrl: UrlData.redirectUrl
+  // ... 기타 본인인증 데이터
+);
+
+// ...
+```
+
+##### 4.2 Associated Domains 설정
+IOS 프로젝트의 `Runner.entitlements` 파일 또는 Xcode의 Signing & Capabilities 탭에서 Associated Domains 설정을 추가해야 합니다.
+
+1.  Xcode를 사용하여 프로젝트를 엽니다.
+2.  **Runner** 타겟을 선택합니다.
+3.  **Signing & Capabilities** 탭으로 이동합니다.
+4.  **+ Capability** 버튼을 클릭하여 **Associated Domains**를 추가합니다.
+5.  Associated Domains 목록에 다음 도메인들을 추가합니다. 각 도메인 앞에는 `applinks:`를 붙여야 합니다.
+    *   `applinks:www.sktpass.com`
+    *   `applinks:fido.kt.com`
+    *   `applinks:fido.uplus.co.kr`
+
+또는 `ios/Runner/Runner.entitlements` 파일을 직접 수정하여 아래와 같이 추가할 수 있습니다.
+
+```xml
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<plist version="1.0">
+<dict>
+  <key>com.apple.developer.associated-domains</key>
+  <array>
+    <string>applinks:www.sktpass.com</string>
+    <string>applinks:fido.kt.com</string>
+    <string>applinks:fido.uplus.co.kr</string>
+    <!-- 기존에 다른 applinks가 있다면 여기에 추가합니다. -->
+  </array>
+  <!-- 다른 capabilities 설정이 있다면 유지합니다. -->
+</dict>
+</plist>
+```
+
+자세한 Universal Link 설정 방법은 Flutter 공식 문서 [Set up universal links for iOS](https://docs.flutter.dev/cookbook/navigation/set-up-universal-links#add-associated-domains)를 참고하세요.
+
 ### Android 설정하기
 안드로이드 API 레벨 30에서 특정 카드사로 결제 시도시 `net::ERR_CLEARTEXT_NOT_PERMITTED` 오류가 발생한다는 버그가 보고되었습니다. 이를 해결하기 위해서는 [AndroidManifest.xml](https://github.com/portone-io/portone_flutter/blob/develop/example/android/app/src/main/AndroidManifest.xml#L13) 파일에 아래와 같이 [usesclearTextTraffic](https://developer.android.com/guide/topics/manifest/application-element#usesCleartextTraffic) 속성을 `true`로 설정해주셔야 합니다.
 
