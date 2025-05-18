@@ -138,7 +138,7 @@ IOS에서 포트원 V1 결제연동 모듈을 사용하기 위해서는 `info.pl
 Push 알림 없이 PASS 앱(SKT PASS, KT 인증, U+인증)을 실행해 본인인증을 진행하고 앱으로 복귀하기 위해서는 Universal Link 설정이 필요합니다.
 
 ##### 4.1 mRedirectUrl 설정
-본인인증 요청 시 `CertificationData` 객체의 `mRedirectUrl` 파라미터에 `UrlData.redirectUrl` 값을 설정해야 합니다. 다날의 경우, mRedirectUrl 설정 시 carrier 파라미터로 전달한 통신사 선택을 사용자가 변경할 수 없으므로 주의해주세요.
+본인인증 요청 시 `CertificationData` 객체의 `mRedirectUrl` 파라미터에 `UrlData.redirectUrl` 값을 설정해야 합니다. 다날의 경우, `mRedirectUrl` 설정 시 `carrier` 파라미터로 전달한 통신사 선택을 사용자가 변경할 수 없으므로 주의해주세요.
 
 ```dart
 import 'package:portone_flutter/model/certification_data.dart';
