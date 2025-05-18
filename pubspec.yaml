@@ -1,4 +1,4 @@
-name: portone_flutter
+name: iamport_flutter
 description: Plugin that allows Flutter to use PortOne V1 payment and certification functions.
 version: 0.12.1
 homepage: https://github.com/portone/portone_flutter
